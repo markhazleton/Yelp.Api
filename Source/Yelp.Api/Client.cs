@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,19 +57,58 @@ namespace Yelp.Api
         #region Search
 
         /// <summary>
-        /// Searches any and all businesses matching the specified search text.
+        /// SearchCityStateCategory
         /// </summary>
-        /// <param name="term">Text to search businesses with.</param>
-        /// <param name="city">City.</param>
-        /// <param name="state">State.</param>
-        /// <param name="ct">Cancellation token instance. Use CancellationToken.None if not needed.</param>
-        /// <returns>SearchResponse with businesses matching the specified parameters.</returns>
-        public Task<SearchResponse> SearchBusinessesAllAsync(string term,
+        /// <param name="term"></param>
+        /// <param name="city"></param>
+        /// <param name="state"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        public string SearchCityStateCategory(
+            string term,
+            string city,
+            string state,
+            int limit = 5
+            )
+        {
+            CancellationToken ct = default(CancellationToken);
+            SearchRequest search = new SearchRequest
+            {
+                MaxResults = limit
+            };
+            if (!string.IsNullOrEmpty(term))
+                search.Term = term;
+            
+            if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(state))
+            {
+                search.Location = $"{city}, {state}";
+            }
+            SearchResponse result =  SearchBusinessesAllAsync(search, ct).Result;
+            System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(SearchResponse));
+            StringWriter sw = new StringWriter();
+            writer.Serialize(sw, result);
+            return sw.ToString();
+
+        }
+            /// <summary>
+            /// Searches any and all businesses matching the specified search text.
+            /// </summary>
+            /// <param name="term">Text to search businesses with.</param>
+            /// <param name="city">City.</param>
+            /// <param name="state">State.</param>
+            /// <param name="ct">Cancellation token instance. Use CancellationToken.None if not needed.</param>
+            /// <returns>SearchResponse with businesses matching the specified parameters.</returns>
+            public Task<SearchResponse> SearchBusinessesAllAsync(string term,
                                                              string city,
                                                              string state,
+                                                             int limit = 5,
                                                              CancellationToken ct = default(CancellationToken))
         {
-            SearchRequest search = new SearchRequest();
+            SearchRequest search = new SearchRequest
+            {
+                MaxResults = limit
+            };
+
             if (!string.IsNullOrEmpty(term))
                 search.Term = term;
 
@@ -78,7 +118,6 @@ namespace Yelp.Api
             }
             return SearchBusinessesAllAsync(search, ct);
         }
-
 
         /// <summary>
         /// Searches businesses that deliver matching the specified search text.

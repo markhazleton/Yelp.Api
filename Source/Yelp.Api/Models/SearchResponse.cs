@@ -12,6 +12,6 @@ namespace Yelp.Api.Models
         public int Total { get; set; }
 
         [JsonProperty("businesses")]
-        public IList<BusinessResponse> Businesses { get; set; }
+        public List<BusinessResponse> Businesses { get; set; }
     }
 }

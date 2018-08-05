@@ -5,8 +5,6 @@ namespace Yelp.Api.Models
 {
     public class BusinessResponse : ResponseBase
     {
-        #region Properties
-
         [JsonProperty("categories")]
         public Category[] Categories { get; set; }
 
@@ -58,8 +56,6 @@ namespace Yelp.Api.Models
         [JsonProperty("is_claimed")]
         public bool IsClaimed { get; set; }
         
-        #endregion
-
         #region Location
 
         public const int CoordinateDecimalPlaces = 6;
@@ -78,7 +74,6 @@ namespace Yelp.Api.Models
         public double DistanceAway
         {
             get { return _DistanceAway; }
-            private set { this.SetProperty(ref _DistanceAway, value); }
         }
 
         /// <summary>
@@ -87,12 +82,12 @@ namespace Yelp.Api.Models
         /// <param name="loc">Location object to calculate distance away with.</param>
         public void SetDistanceAway(Coordinates loc)
         {
-            this.DistanceAway = this.GetDistanceTo(loc);
+            _DistanceAway = this.GetDistanceTo(loc);
         }
 
         public void SetDistanceAway(double latitude, double longitude)
         {
-            this.DistanceAway = this.GetDistanceTo(new Coordinates { Latitude = latitude, Longitude = longitude });
+            _DistanceAway = this.GetDistanceTo(new Coordinates { Latitude = latitude, Longitude = longitude });
         }
 
         /// <summary>

@@ -30,13 +30,8 @@ namespace Yelp.Api.Test
         {
             var State = "Texas";
             var City = "Dallas";
-
-            var response = _client.SearchBusinessesAllAsync("tacos", City, State).Result;
-
+            var response = _client.SearchCityStateCategory("tacos", City, State);
             Assert.AreNotSame(null, response);
-            Assert.AreSame(null,
-                           response?.Error,
-                           $"Response error returned {response?.Error?.Code} - {response?.Error?.Description}");
         }
 
         [TestMethod]

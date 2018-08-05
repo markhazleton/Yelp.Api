@@ -37,6 +37,7 @@
     <Compile Include="Client.cs" />
     <Compile Include="ClientBase.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\SerializationHelper.cs" />
     <Compile Include="Models\AutocompleteResponse.cs" />
     <Compile Include="Models\Business.cs" />
     <Compile Include="Models\Category.cs" />
