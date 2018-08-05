@@ -1,21 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Threading;
 using Yelp.Api.Models;
 
 namespace Yelp.Api.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class UnitTest1 : IDisposable
     {
-        #region Variables
-
-        private const string API_KEY = "";
-
-        private readonly Client _client;
-
-        #endregion
-
         #region Constructors
 
         public UnitTest1()
@@ -25,7 +16,28 @@ namespace Yelp.Api.Test
 
         #endregion
 
+        #region Variables
+
+        private const string API_KEY = "OMJiy42P85UdkilYO-V8dC98cA9Y8HQlsr5QVijwltwqeSdNGPmgFfL7_921BDgzl_8z-sfe8i5zroWt_vogzfq2th4XlufZ2xqASsOkQ0sOBpoaRlemA6UM9EyjWnYx";
+
+        private readonly Client _client;
+
+        #endregion
+
         #region Methods
+        [TestMethod]
+        public void TestSearchCityState()
+        {
+            var State = "Texas";
+            var City = "Dallas";
+
+            var response = _client.SearchBusinessesAllAsync("tacos", City, State).Result;
+
+            Assert.AreNotSame(null, response);
+            Assert.AreSame(null,
+                           response?.Error,
+                           $"Response error returned {response?.Error?.Code} - {response?.Error?.Description}");
+        }
 
         [TestMethod]
         public void TestSearch()
@@ -33,7 +45,9 @@ namespace Yelp.Api.Test
             var response = _client.SearchBusinessesAllAsync("cupcakes", 37.786882, -122.399972).Result;
 
             Assert.AreNotSame(null, response);
-            Assert.AreSame(null, response?.Error, $"Response error returned {response?.Error?.Code} - {response?.Error?.Description}");
+            Assert.AreSame(null,
+                           response?.Error,
+                           $"Response error returned {response?.Error?.Code} - {response?.Error?.Description}");
         }
 
         [TestMethod]
@@ -42,7 +56,9 @@ namespace Yelp.Api.Test
             var response = _client.SearchBusinessesWithDeliveryAsync("mex", 37.786882, -122.399972).Result;
 
             Assert.AreNotSame(null, response);
-            Assert.AreSame(null, response?.Error, $"Response error returned {response?.Error?.Code} - {response?.Error?.Description}");
+            Assert.AreSame(null,
+                           response?.Error,
+                           $"Response error returned {response?.Error?.Code} - {response?.Error?.Description}");
         }
 
         [TestMethod]
@@ -52,7 +68,9 @@ namespace Yelp.Api.Test
 
             Assert.IsTrue(response.Categories.Length > 0);
             Assert.AreNotSame(null, response);
-            Assert.AreSame(null, response?.Error, $"Response error returned {response?.Error?.Code} - {response?.Error?.Description}");
+            Assert.AreSame(null,
+                           response?.Error,
+                           $"Response error returned {response?.Error?.Code} - {response?.Error?.Description}");
         }
 
         [TestMethod]
@@ -61,7 +79,9 @@ namespace Yelp.Api.Test
             var response = _client.GetBusinessAsync("north-india-restaurant-san-francisco").Result;
 
             Assert.AreNotSame(null, response);
-            Assert.AreSame(null, response?.Error, $"Response error returned {response?.Error?.Code} - {response?.Error?.Description}");
+            Assert.AreSame(null,
+                           response?.Error,
+                           $"Response error returned {response?.Error?.Code} - {response?.Error?.Description}");
         }
 
         [TestMethod]
@@ -70,24 +90,30 @@ namespace Yelp.Api.Test
             var response = _client.GetReviewsAsync("north-india-restaurant-san-francisco").Result;
 
             Assert.AreNotSame(null, response);
-            Assert.AreSame(null, response?.Error, $"Response error returned {response?.Error?.Code} - {response?.Error?.Description}");
+            Assert.AreSame(null,
+                           response?.Error,
+                           $"Response error returned {response?.Error?.Code} - {response?.Error?.Description}");
         }
-
 
 
         [TestMethod]
         public void TestGetModelChanges()
         {
-            var m = new SearchRequest();
-            m.Term = "Hello world";
-            m.Price = "$";
+            var m = new SearchRequest
+            {
+                Term = "Hello world",
+                Price = "$"
+            };
             var dic = m.GetChangedProperties();
 
             Assert.AreEqual(dic.Count, 2);
             Assert.IsTrue(dic.ContainsKey("term"));
             Assert.IsTrue(dic.ContainsKey("price"));
         }
-
+        public void Dispose()
+        {
+            _client.Dispose();
+        }
         #endregion
     }
 }
