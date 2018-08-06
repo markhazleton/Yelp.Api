@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Yelp.Api.Models;
 
 namespace Yelp.Api
@@ -64,12 +66,10 @@ namespace Yelp.Api
         /// <param name="state"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public string SearchCityStateCategory(
-            string term,
-            string city,
-            string state,
-            int limit = 5
-            )
+        public string SearchCityStateCategory(string term,
+                                              string city,
+                                              string state,
+                                              int limit = 5)
         {
             CancellationToken ct = default(CancellationToken);
             SearchRequest search = new SearchRequest
@@ -78,36 +78,38 @@ namespace Yelp.Api
             };
             if (!string.IsNullOrEmpty(term))
                 search.Term = term;
-            
+
             if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(state))
             {
                 search.Location = $"{city}, {state}";
             }
-            SearchResponse result =  SearchBusinessesAllAsync(search, ct).Result;
-            System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(SearchResponse));
+            SearchResponse result = SearchBusinessesAllAsync(search, ct).Result;
+            XmlSerializer writer = new XmlSerializer(typeof(SearchResponse));
             StringWriter sw = new StringWriter();
             writer.Serialize(sw, result);
             return sw.ToString();
-
         }
-            /// <summary>
-            /// Searches any and all businesses matching the specified search text.
-            /// </summary>
-            /// <param name="term">Text to search businesses with.</param>
-            /// <param name="city">City.</param>
-            /// <param name="state">State.</param>
-            /// <param name="ct">Cancellation token instance. Use CancellationToken.None if not needed.</param>
-            /// <returns>SearchResponse with businesses matching the specified parameters.</returns>
-            public Task<SearchResponse> SearchBusinessesAllAsync(string term,
-                                                             string city,
-                                                             string state,
-                                                             int limit = 5,
-                                                             CancellationToken ct = default(CancellationToken))
+
+        /// <summary>
+        /// Searches any and all businesses matching the specified search text.
+        /// </summary>
+        /// <param name="term">Text to search businesses with.</param>
+        /// <param name="city">City.</param>
+        /// <param name="state">State.</param>
+        /// <param name="ct">Cancellation token instance. Use CancellationToken.None if not needed.</param>
+        /// <returns>SearchResponse with businesses matching the specified parameters.</returns>
+        public SearchResponse SearchCityStateCategoryAsync(string term,
+                                                                 string city,
+                                                                 string state,
+                                                                 int limit = 5,
+                                                                 bool details = false,
+                                                                 CancellationToken ct = default(CancellationToken))
         {
             SearchRequest search = new SearchRequest
             {
                 MaxResults = limit
             };
+            search.SortBy = "rating";
 
             if (!string.IsNullOrEmpty(term))
                 search.Term = term;
@@ -116,7 +118,25 @@ namespace Yelp.Api
             {
                 search.Location = $"{city}, {state}";
             }
-            return SearchBusinessesAllAsync(search, ct);
+            if (details)
+            {
+                var response = SearchBusinessesAllAsync(search, ct).Result;
+                var bizList = response.Businesses.Select(s => s.Id).ToArray();
+                response.Businesses.Clear();
+                foreach (var biz in bizList)
+                {
+                    response.Businesses.Add(GetBusinessAsync(biz).Result);
+                }
+                foreach (var biz in response.Businesses)
+                {
+                    biz.Reviews.AddRange(GetReviewsAsync(biz.Id).Result.Reviews);
+                }
+                return response;
+            }
+            else
+            {
+                return SearchBusinessesAllAsync(search, ct).Result;
+            }
         }
 
         /// <summary>
@@ -141,7 +161,9 @@ namespace Yelp.Api
             dic.Add("latitude", latitude);
             dic.Add("longitude", longitude);
             string querystring = dic.ToQueryString();
-            var response = await this.GetAsync<SearchResponse>($"{API_VERSION}/transactions/delivery/search{querystring}", ct).ConfigureAwait(false);
+            var response = await this.GetAsync<SearchResponse>($"{API_VERSION}/transactions/delivery/search{querystring}",
+                                                               ct)
+            .ConfigureAwait(false);
 
             // Set distances baased on lat/lon
             if (response?.Businesses != null && !double.IsNaN(latitude) && !double.IsNaN(longitude))
@@ -188,7 +210,8 @@ namespace Yelp.Api
             ApplyAuthenticationHeaders();
 
             var querystring = search.GetChangedProperties().ToQueryString();
-            var response = await this.GetAsync<SearchResponse>($"{API_VERSION}/businesses/search{querystring}", ct).ConfigureAwait(false);
+            var response = await this.GetAsync<SearchResponse>($"{API_VERSION}/businesses/search{querystring}", ct)
+            .ConfigureAwait(false);
 
             // Set distances baased on lat/lon
             if (response?.Businesses != null && !double.IsNaN(search.Latitude) && !double.IsNaN(search.Longitude))
@@ -230,7 +253,8 @@ namespace Yelp.Api
                 dic.Add("locale", locale);
             string querystring = dic.ToQueryString();
 
-            var response = await this.GetAsync<AutocompleteResponse>($"{API_VERSION}/autocomplete{querystring}", ct).ConfigureAwait(false);
+            var response = await this.GetAsync<AutocompleteResponse>($"{API_VERSION}/autocomplete{querystring}", ct)
+            .ConfigureAwait(false);
 
             // Set distances baased on lat/lon
             if (response?.Businesses != null && !double.IsNaN(latitude) && !double.IsNaN(longitude))
@@ -254,7 +278,8 @@ namespace Yelp.Api
                                                              CancellationToken ct = default(CancellationToken))
         {
             ApplyAuthenticationHeaders();
-            return await GetAsync<BusinessResponse>($"{API_VERSION}/businesses/{Uri.EscapeUriString(businessID)}",ct).ConfigureAwait(false);
+            return await GetAsync<BusinessResponse>($"{API_VERSION}/businesses/{Uri.EscapeUriString(businessID)}", ct)
+            .ConfigureAwait(false);
         }
 
         #endregion
@@ -277,7 +302,9 @@ namespace Yelp.Api
             if (!string.IsNullOrEmpty(locale))
                 dic.Add("locale", locale);
             string querystring = dic.ToQueryString();
-            return await this.GetAsync<ReviewsResponse>($"{API_VERSION}/businesses/{Uri.EscapeUriString(businessID)}/reviews{querystring}",ct).ConfigureAwait(false);
+            return await this.GetAsync<ReviewsResponse>($"{API_VERSION}/businesses/{Uri.EscapeUriString(businessID)}/reviews{querystring}",
+                                                        ct)
+            .ConfigureAwait(false);
         }
         #endregion
 

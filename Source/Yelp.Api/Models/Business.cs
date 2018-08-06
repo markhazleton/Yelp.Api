@@ -1,10 +1,15 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Yelp.Api.Models
 {
     public class BusinessResponse : ResponseBase
     {
+        public BusinessResponse()
+        {
+            Reviews = new List<Review>();
+        }
         [JsonProperty("categories")]
         public Category[] Categories { get; set; }
 
@@ -46,7 +51,7 @@ namespace Yelp.Api.Models
 
         [JsonProperty("review_count")]
         public int ReviewCount { get; set; }
-
+        public List<Review> Reviews { get; set; }
         [JsonProperty("photos")]
         public string[] Photos { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 using Yelp.Api.Models;
 
 namespace Yelp.Api.Test
@@ -31,6 +32,14 @@ namespace Yelp.Api.Test
             var State = "Texas";
             var City = "Dallas";
             var response = _client.SearchCityStateCategory("tacos", City, State);
+            Assert.AreNotSame(null, response);
+        }
+        [TestMethod]
+        public void TestSearchCityStateAsync()
+        {
+            var State = "Texas";
+            var City = "Dallas";
+            var response = _client.SearchCityStateCategoryAsync("tacos", City, State,5,true);
             Assert.AreNotSame(null, response);
         }
 
