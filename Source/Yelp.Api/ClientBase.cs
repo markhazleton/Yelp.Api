@@ -62,9 +62,9 @@ namespace Yelp.Api
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException(nameof(url));
 
-            var response = await this.Client.GetAsync(new Uri(this.BaseUri, url), ct);
+            var response = await this.Client.GetAsync(new Uri(this.BaseUri, url), ct).ConfigureAwait(false);
             this.Log(response);
-            var data = await response.Content.ReadAsStringAsync();
+            var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var settings = new JsonSerializerSettings
             {
@@ -87,7 +87,7 @@ namespace Yelp.Api
         /// <returns>Instance of the type specified representing the data returned from the URL.</returns>
         protected async Task<T> PostAsync<T>(string url, CancellationToken ct, HttpContent contents = default(HttpContent))
         {
-            string data = await this.PostAsync(url, ct, contents);
+            string data = await this.PostAsync(url, ct, contents).ConfigureAwait(false);
 
             var settings = new JsonSerializerSettings
             {
@@ -109,7 +109,7 @@ namespace Yelp.Api
         /// <returns>Response contents as string else null if nothing.</returns>
         protected async Task<string> PostAsync(string url, CancellationToken ct, HttpContent contents = default(HttpContent))
         {
-            HttpResponseMessage response = await this.PostAsync(url, contents, ct);
+            HttpResponseMessage response = await this.PostAsync(url, contents, ct).ConfigureAwait(false);
             var data = await response.Content?.ReadAsStringAsync();
             return data;
         }
@@ -127,7 +127,7 @@ namespace Yelp.Api
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException(nameof(url));
 
-            var response = await this.Client.PostAsync(new Uri(this.BaseUri, url), contents, ct);
+            var response = await this.Client.PostAsync(new Uri(this.BaseUri, url), contents, ct).ConfigureAwait(false);
             this.Log(response);
             return response;
         }
