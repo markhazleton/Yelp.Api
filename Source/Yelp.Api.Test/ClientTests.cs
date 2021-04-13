@@ -1,16 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Linq;
 using Yelp.Api.Models;
 
 namespace Yelp.Api.Test
 {
     [TestClass]
-    public class UnitTest1 : IDisposable
+    public class ClientTests : IDisposable
     {
         #region Constructors
 
-        public UnitTest1()
+        public ClientTests()
         {
             _client = new Client(API_KEY);
         }
