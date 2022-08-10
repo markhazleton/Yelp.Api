@@ -1,0 +1,18 @@
+﻿@model Yelp.Api.Domain.Models.SearchResponse
+
+@{
+    ViewData["Title"] = "Bars Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Yelp API Bars</h1>
+    @if (Model != null)
+    {
+        <div class="row">
+            @foreach (var item in Model.Businesses)
+            {
+                    @await Html.PartialAsync("_businessResponse",item)
+            }
+        </div>
+    }
+</div>
