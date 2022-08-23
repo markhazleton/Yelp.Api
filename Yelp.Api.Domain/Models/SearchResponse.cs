@@ -11,4 +11,8 @@ public class SearchResponse : ResponseBase
 
     [JsonProperty("total")]
     public int Total { get; set; }
+    /// <summary>
+    /// Terms Used for Search
+    /// </summary>
+    public string? Term { get; set; }
 }

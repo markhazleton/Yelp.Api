@@ -256,12 +256,14 @@ public sealed class Client : ClientBase
                                                              string state,
                                                              int limit = 5,
                                                              bool details = false,
-                                                             CancellationToken ct = default(CancellationToken))
+                                                             CancellationToken ct = default)
     {
+        term = term.InitCapitalConvert();
+
         string cacheKey = $"{city}:{state}:{term}";
         SearchResponse? cacheContents = (SearchResponse)cache.Get(cacheKey);
         if (cacheContents != null) return cacheContents;
-        CacheItemPolicy policy = new CacheItemPolicy
+        CacheItemPolicy policy = new()
         {
             AbsoluteExpiration = DateTimeOffset.Now.AddHours(10.0)
         };
@@ -296,6 +298,7 @@ public sealed class Client : ClientBase
         {
             cacheContents = await SearchBusinessesAllAsync(search, ct);
         }
+        cacheContents.Term = term;
         cache.Set(cacheKey, cacheContents, policy);
         return cacheContents;
     }

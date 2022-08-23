@@ -8,7 +8,7 @@ public class ClientTests : IDisposable
     public ClientTests(IConfiguration configuration)
     {
         _configuration = configuration;
-        _client = new Client(configuration["YELPAPI_KEY"]);
+        _client = new Client(configuration["YELPAPIKEY"]);
     }
     private readonly IConfiguration _configuration;
 

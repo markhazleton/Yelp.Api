@@ -27,7 +27,7 @@ public abstract class BaseController : Controller
     {
         cts = new CancellationTokenSource();
         _configuration = configuration;
-        _client = new Client(configuration["YELPAPI_KEY"]);
+        _client = new Client(configuration["YELPAPIKEY"]);
     }
     protected ApplicationStatus GetApplicationStatus()
     {

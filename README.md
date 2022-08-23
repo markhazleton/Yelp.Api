@@ -1,6 +1,7 @@
 # Yelp.API
-C# Class Library for Yelp (v3) Fusion API works with .NET projects. 
-Yelp's (v3) Fusion API allows you to get the best local business information and user reviews of over million businesses in 32 countries.
+C# Class Library for Yelp (v3) Fusion API works with .NET projects using Net 6. 
+Yelp's (v3) Fusion API allows you to get the best local business information and 
+user reviews of over million businesses in 32 countries.
 
 ## How to use the Yelp API in your .NET based app
 

@@ -1,9 +1,9 @@
 ﻿
 namespace Yelp.Api.Domain.Extensions;
 
-internal static class DictionaryExtensions
+public static class DictionaryExtensions
 {
-    internal static IEnumerable<KeyValuePair<T, S>> ToKeyValuePairList<T, S>(this Dictionary<T, S> dictionary)
+    public static IEnumerable<KeyValuePair<T, S>> ToKeyValuePairList<T, S>(this Dictionary<T, S> dictionary)
     {
         var list = new List<KeyValuePair<T, S>>();
         foreach (var pair in dictionary)
@@ -11,7 +11,7 @@ internal static class DictionaryExtensions
         return list;
     }
 
-    internal static string ToQueryString(this Dictionary<string, object> dictionary)
+    public static string ToQueryString(this Dictionary<string, object> dictionary)
     {
         string querystring = string.Empty;
         List<string> parameters = new List<string>();
@@ -27,4 +27,20 @@ internal static class DictionaryExtensions
 
         return querystring;
     }
+
+    public static string InitCapitalConvert(this string input_string)
+    {
+        input_string = ' ' + input_string.ToLower();
+
+        string[] AlphabatList = new string[] {"a","b","c","d","e","f","g",
+    "h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
+
+        foreach (string alpha in AlphabatList)
+        {
+            input_string = input_string.Replace(' ' + alpha, ' ' + alpha.ToUpper());
+        }
+        return input_string;
+    }
+
+
 }

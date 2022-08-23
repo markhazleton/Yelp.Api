@@ -1,5 +1,4 @@
-﻿
-namespace Yelp.Api.Web.Controllers;
+﻿namespace Yelp.Api.Web.Controllers;
 /// <summary>
 /// Home Controller
 /// </summary>
@@ -33,13 +32,13 @@ public class HomeController : BaseController
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="cat"></param>
+    /// <param name="id"></param>
     /// <returns></returns>
-    public async Task<ActionResult> Category(string cat = "bars")
+    public async Task<ActionResult> Category(string id = "bars")
     {
         var State = "Kansas";
         var City = "Wichita";
-        return View(await _client.SearchCityStateCategoryAsync(cat, City, State, 10, true));
+        return View(await _client.SearchCityStateCategoryAsync(id, City, State, 10, true));
 
     }
 
