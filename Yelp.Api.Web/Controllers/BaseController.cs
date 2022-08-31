@@ -1,4 +1,5 @@
-﻿namespace Yelp.Api.Web.Controllers;
+﻿
+namespace Yelp.Api.Web.Controllers;
 
 /// <summary>
 /// BaseController

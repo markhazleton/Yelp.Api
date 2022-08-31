@@ -3,13 +3,14 @@ namespace Yelp.Api.Domain.Models;
 
 public class BusinessResponse : ResponseBase
 {
-
-
     public const int CoordinateDecimalPlaces = 6;
     public const int DistanceDecimalPlaces = 2;
 
     private double _DistanceAway = double.NaN;
 
+    /// <summary>
+    /// Business Response
+    /// </summary>
     public BusinessResponse()
     {
         Reviews = new List<Review>();

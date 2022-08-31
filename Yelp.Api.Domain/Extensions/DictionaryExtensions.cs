@@ -30,14 +30,14 @@ public static class DictionaryExtensions
 
     public static string InitCapitalConvert(this string input_string)
     {
-        input_string = ' ' + input_string.ToLower();
+        input_string = $" {input_string.ToLower()}";
 
         string[] AlphabatList = new string[] {"a","b","c","d","e","f","g",
     "h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
 
         foreach (string alpha in AlphabatList)
         {
-            input_string = input_string.Replace(' ' + alpha, ' ' + alpha.ToUpper());
+            input_string = input_string.Replace($" {alpha}", $" {alpha.ToUpper()}");
         }
         return input_string;
     }

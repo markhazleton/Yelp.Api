@@ -146,7 +146,7 @@ public sealed class Client : ClientBase
         var response = await this.GetAsync<SearchResponse>($"{API_VERSION}/businesses/search{querystring}", ct)
         .ConfigureAwait(false);
 
-        // Set distances baased on lat/lon
+        // Set distances based on lat/lon
         if (response?.Businesses != null && !double.IsNaN(search.Latitude) && !double.IsNaN(search.Longitude))
             foreach (var business in response.Businesses)
                 business.SetDistanceAway(search.Latitude, search.Longitude);
