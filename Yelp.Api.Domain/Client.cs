@@ -62,7 +62,7 @@ public sealed class Client : ClientBase
                                                               double latitude,
                                                               double longitude,
                                                               string locale = null,
-                                                              CancellationToken ct = default(CancellationToken))
+                                                              CancellationToken ct = default)
     {
         ValidateCoordinates(latitude, longitude);
         ApplyAuthenticationHeaders();
@@ -88,8 +88,6 @@ public sealed class Client : ClientBase
         return response;
     }
 
-
-
     /// <summary>
     /// Gets details of a business based on the provided ID value.
     /// </summary>
@@ -97,14 +95,12 @@ public sealed class Client : ClientBase
     /// <param name="ct">Cancellation token instance. Use CancellationToken.None if not needed.</param>
     /// <returns>BusinessResponse instance with details of the specified business if found.</returns>
     public async Task<BusinessResponse> GetBusinessAsync(string businessID,
-                                                         CancellationToken ct = default(CancellationToken))
+                                                         CancellationToken ct = default)
     {
         ApplyAuthenticationHeaders();
-        return await GetAsync<BusinessResponse>($"{API_VERSION}/businesses/{Uri.EscapeUriString(businessID)}", ct)
+        return await GetAsync<BusinessResponse>($"{API_VERSION}/businesses/{Uri.EscapeDataString(businessID)}", ct)
         .ConfigureAwait(false);
     }
-
-
 
     /// <summary>
     /// Gets user reviews of a business based on the provided ID value.
@@ -115,14 +111,14 @@ public sealed class Client : ClientBase
     /// <returns>ReviewsResponse instance with reviews of the specified business if found.</returns>
     public async Task<ReviewsResponse> GetReviewsAsync(string businessID,
                                                        string locale = null,
-                                                       CancellationToken ct = default(CancellationToken))
+                                                       CancellationToken ct = default)
     {
         ApplyAuthenticationHeaders();
         var dic = new Dictionary<string, object>();
         if (!string.IsNullOrEmpty(locale))
             dic.Add("locale", locale);
         string querystring = dic.ToQueryString();
-        return await this.GetAsync<ReviewsResponse>($"{API_VERSION}/businesses/{Uri.EscapeUriString(businessID)}/reviews{querystring}",
+        return await this.GetAsync<ReviewsResponse>($"{API_VERSION}/businesses/{Uri.EscapeDataString(businessID)}/reviews{querystring}",
                                                     ct)
         .ConfigureAwait(false);
     }
@@ -134,7 +130,7 @@ public sealed class Client : ClientBase
     /// <param name="ct">Cancellation token instance. Use CancellationToken.None if not needed.</param>
     /// <returns>SearchResponse with businesses matching the specified parameters.</returns>
     public async Task<SearchResponse> SearchBusinessesAllAsync(SearchRequest search,
-                                                               CancellationToken ct = default(CancellationToken))
+                                                               CancellationToken ct = default)
     {
         if (search == null)
             throw new ArgumentNullException(nameof(search));
@@ -165,7 +161,7 @@ public sealed class Client : ClientBase
     public Task<SearchResponse> SearchBusinessesAllAsync(string term,
                                                          double latitude,
                                                          double longitude,
-                                                         CancellationToken ct = default(CancellationToken))
+                                                         CancellationToken ct = default)
     {
         SearchRequest search = new SearchRequest();
         if (!string.IsNullOrEmpty(term))
@@ -186,7 +182,7 @@ public sealed class Client : ClientBase
     public async Task<SearchResponse> SearchBusinessesWithDeliveryAsync(string term,
                                                                         double latitude,
                                                                         double longitude,
-                                                                        CancellationToken ct = default(CancellationToken))
+                                                                        CancellationToken ct = default)
     {
         ValidateCoordinates(latitude, longitude);
         ApplyAuthenticationHeaders();
@@ -224,7 +220,7 @@ public sealed class Client : ClientBase
                                           string state,
                                           int limit = 5)
     {
-        CancellationToken ct = default(CancellationToken);
+        CancellationToken ct = default;
         SearchRequest search = new SearchRequest
         {
             MaxResults = limit
@@ -263,6 +259,7 @@ public sealed class Client : ClientBase
         string cacheKey = $"{city}:{state}:{term}";
         SearchResponse? cacheContents = (SearchResponse)cache.Get(cacheKey);
         if (cacheContents != null) return cacheContents;
+
         CacheItemPolicy policy = new()
         {
             AbsoluteExpiration = DateTimeOffset.Now.AddHours(10.0)
@@ -289,6 +286,7 @@ public sealed class Client : ClientBase
             {
                 cacheContents.Businesses.Add(GetBusinessAsync(biz).Result);
             }
+
             foreach (var biz in cacheContents.Businesses)
             {
                 biz.Reviews.AddRange(GetReviewsAsync(biz.Id).Result.Reviews);
@@ -298,7 +296,10 @@ public sealed class Client : ClientBase
         {
             cacheContents = await SearchBusinessesAllAsync(search, ct);
         }
+        cacheContents.City = city;
+        cacheContents.State = state;
         cacheContents.Term = term;
+        cacheContents.RequestTime = DateTime.Now;
         cache.Set(cacheKey, cacheContents, policy);
         return cacheContents;
     }

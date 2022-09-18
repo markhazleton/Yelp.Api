@@ -40,11 +40,7 @@ public class HomeController : BaseController
     public async Task<ActionResult> Category(string id = "bars", string state = "Kansas", string city = "Wichita")
     {
         var yelpReturn = await _client.SearchCityStateCategoryAsync(id, city, state, 10, true);
-
         return View(yelpReturn);
-
     }
-
-
 }
 

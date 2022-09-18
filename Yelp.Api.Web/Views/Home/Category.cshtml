@@ -9,7 +9,14 @@
     {
         <div class="row">
             @foreach (var item in Model.Businesses)
-            {@await Html.PartialAsync("_businessResponse",item)}
+            {
+                @await Html.PartialAsync("_businessResponse",item)
+            }
         </div>
     }
+</div>
+
+<div>
+    <small>@Model.City , @Model.State</small><br />
+    <small>Data from @Model.RequestTime.ToLongDateString() - @Model.RequestTime.ToLongTimeString()</small><br />
 </div>

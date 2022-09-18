@@ -3,7 +3,6 @@ namespace Yelp.Api.Domain.Models;
 
 public class SearchResponse : ResponseBase
 {
-
     [JsonProperty("businesses")]
     public List<BusinessResponse> Businesses { get; set; } = new List<BusinessResponse>();
     [JsonProperty("region")]
@@ -15,6 +14,7 @@ public class SearchResponse : ResponseBase
     /// Terms Used for Search
     /// </summary>
     public string? Term { get; set; }
-
-
+    public DateTime RequestTime { get; set; }
+    public string City { get; internal set; }
+    public string State { get; internal set; }
 }
