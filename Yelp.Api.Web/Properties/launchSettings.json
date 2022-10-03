@@ -1,12 +1,4 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:6080",
-      "sslPort": 44307
-    }
-  },
   "profiles": {
     "Yelp.Api.Web": {
       "commandName": "Project",
@@ -26,6 +18,21 @@
       },
       "sqlDebugging": true,
       "nativeDebugging": false
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "publishAllPorts": true,
+      "useSSL": true
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:6080",
+      "sslPort": 44307
     }
   }
 }
