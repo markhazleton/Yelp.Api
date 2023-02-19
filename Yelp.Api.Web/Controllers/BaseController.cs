@@ -24,11 +24,11 @@ public abstract class BaseController : Controller
     /// <summary>
     /// BaseController
     /// </summary>
-    protected BaseController(IConfiguration configuration)
+    protected BaseController(IConfiguration configuration, IHttpClientFactory factory)
     {
         cts = new CancellationTokenSource();
         _configuration = configuration;
-        _client = new Client(configuration["YELPAPIKEY"]);
+        _client = new Client(configuration["YELPAPIKEY"],factory);
     }
     protected ApplicationStatus GetApplicationStatus()
     {

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Net.Http;
 
 namespace Yelp.Api.Domain;
 
@@ -10,21 +11,16 @@ public abstract class ClientBase : IDisposable
     public const int E_WINHTTP_CANNOT_CONNECT = unchecked((int)0x80072efd);
     public const int E_WINHTTP_CONNECTION_ERROR = unchecked((int)0x80072efe);
     public const int E_WINHTTP_NAME_NOT_RESOLVED = unchecked((int)0x80072ee7);
-
     public const int E_WINHTTP_TIMEOUT = unchecked((int)0x80072ee2);
-
     private ILogger _logger;
 
 
-
-    public ClientBase(string baseURL = null, ILogger logger = null)
+    public ClientBase(string baseURL, IHttpClientFactory factory, ILogger logger = null)
     {
         this.BaseUri = new Uri(baseURL);
-        this.Client = new HttpClient();
+        this.Client = factory.CreateClient("YelpAPI");
         _logger = logger;
     }
-
-
 
     private void Log(string message)
     {

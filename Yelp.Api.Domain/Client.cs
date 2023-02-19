@@ -17,7 +17,7 @@ public sealed class Client : ClientBase
     /// </summary>
     /// <param name="apiKey">App secret from yelp's developer registration page.</param>
     /// <param name="logger">Optional class instance which applies the ILogger interface to support custom logging within the client.</param>
-    public Client(string apiKey, ILogger logger = null) : base(BASE_ADDRESS, logger)
+    public Client(string apiKey, IHttpClientFactory factory, ILogger logger=null) : base(BASE_ADDRESS, factory, logger)
     {
         if (string.IsNullOrWhiteSpace(apiKey))
             throw new ArgumentNullException(nameof(apiKey));
