@@ -5,10 +5,10 @@ namespace Yelp.Api.Domain.Test;
 public class ClientTests : IDisposable
 {
 
-    public ClientTests(IConfiguration configuration,ILogger logger, IHttpClientFactory factory)
+    public ClientTests(IConfiguration configuration, ILogger logger, IHttpClientFactory factory)
     {
         _configuration = configuration;
-        _client = new Client(configuration["YELPAPIKEY"],factory,logger);
+        _client = new Client(configuration["YELPAPIKEY"], factory, logger);
     }
     private readonly IConfiguration _configuration;
 

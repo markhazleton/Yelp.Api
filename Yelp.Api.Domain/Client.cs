@@ -17,7 +17,7 @@ public sealed class Client : ClientBase
     /// </summary>
     /// <param name="apiKey">App secret from yelp's developer registration page.</param>
     /// <param name="logger">Optional class instance which applies the ILogger interface to support custom logging within the client.</param>
-    public Client(string apiKey, IHttpClientFactory factory, ILogger logger=null) : base(BASE_ADDRESS, factory, logger)
+    public Client(string apiKey, IHttpClientFactory factory, ILogger logger = null) : base(BASE_ADDRESS, factory, logger)
     {
         if (string.IsNullOrWhiteSpace(apiKey))
             throw new ArgumentNullException(nameof(apiKey));
@@ -284,12 +284,12 @@ public sealed class Client : ClientBase
             cacheContents.Businesses.Clear();
             foreach (var biz in bizList)
             {
-                cacheContents.Businesses.Add(GetBusinessAsync(biz).Result);
+                cacheContents.Businesses.Add(await GetBusinessAsync(biz, ct));
             }
 
             foreach (var biz in cacheContents.Businesses)
             {
-                biz.Reviews.AddRange(GetReviewsAsync(biz.Id).Result.Reviews);
+                biz.Reviews.AddRange((await GetReviewsAsync(biz.Id, ct: ct)).Reviews);
             }
         }
         else

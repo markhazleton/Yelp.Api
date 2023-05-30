@@ -1,5 +1,4 @@
-﻿
-namespace Yelp.Api.Domain.Models;
+﻿namespace Yelp.Api.Domain.Models;
 
 /// <summary>
 /// Container class for all parameters used by the Search API.

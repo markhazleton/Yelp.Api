@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Net.Http;
 
 namespace Yelp.Api.Domain;
 
@@ -104,7 +103,7 @@ public abstract class ClientBase : IDisposable
 
         var response = await this.Client.GetAsync(new Uri(this.BaseUri, url), ct).ConfigureAwait(false);
         this.Log(response);
-        var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        var data = await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
 
         var settings = new JsonSerializerSettings
         {

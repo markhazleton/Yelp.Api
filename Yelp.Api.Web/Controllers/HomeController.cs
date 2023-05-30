@@ -9,7 +9,7 @@ public class HomeController : BaseController
     /// 
     /// </summary>
     /// <param name="configuration"></param>
-    public HomeController(IConfiguration configuration, IHttpClientFactory factory) : base(configuration,factory)
+    public HomeController(IConfiguration configuration, IHttpClientFactory factory) : base(configuration, factory)
     {
 
     }

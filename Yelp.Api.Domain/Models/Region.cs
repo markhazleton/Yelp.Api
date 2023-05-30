@@ -1,5 +1,4 @@
-﻿
-namespace Yelp.Api.Domain.Models;
+﻿namespace Yelp.Api.Domain.Models;
 
 public class Region
 {
