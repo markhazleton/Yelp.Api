@@ -257,7 +257,7 @@ public sealed class Client : ClientBase
         term = term.InitCapitalConvert();
 
         string cacheKey = $"{city}:{state}:{term}";
-        SearchResponse? cacheContents = (SearchResponse)cache.Get(cacheKey);
+        SearchResponse? cacheContents = (SearchResponse?)cache.Get(cacheKey);
         if (cacheContents != null) return cacheContents;
 
         CacheItemPolicy policy = new()
