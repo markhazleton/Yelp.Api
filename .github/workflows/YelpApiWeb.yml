@@ -7,7 +7,7 @@ env:
   AZURE_WEBAPP_NAME: YelpApiWeb
   AZURE_WEBAPP_PACKAGE_PATH: Yelp.Api.Web/published
   CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 8.0.x
+  DOTNET_CORE_VERSION: 7.0.x
   WORKING_DIRECTORY: Yelp.Api.Web
 jobs:
   build:
