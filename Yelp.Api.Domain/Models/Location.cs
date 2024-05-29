@@ -18,7 +18,7 @@ public class Location
     public string Country { get; set; }
 
     [JsonProperty("display_address")]
-    public string[] DisplayAddress { get; set; }
+    public string[] DisplayAddress { get; set; } = [];
 
     [JsonProperty("state")]
     public string State { get; set; }

@@ -2,26 +2,34 @@
 
 <div class="col-sm-6 col-lg-4 mb-5 hover-animate" data-marker-id="59c0c8e33b1527bfe2abaf92">
     <div class="card h-100 border-0 shadow">
-        <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(@Model.Photos.First()); min-height: 200px;">
-        </div>
+        @if (Model.Photos != null && Model.Photos.Any())
+        {
+            <div class="card-img-top overflow-hidden dark-overlay bg-cover" style="background-image: url(@Model.Photos.First()); min-height: 200px;">
+            </div>
+        }
         <div class="card-header">
-            <h3 class="text-primary text-shadow"><a class="tile-link" target="_blank" href="@Model.Url">@Model.Name</a></h3>
+            <h3 class="text-primary text-shadow"><a class="tile-link" target="_blank" href="@Model?.Url">@Model?.Name</a></h3>
         </div>
         <div class="card-body">
-            @foreach(var loc in @Model.Location.DisplayAddress)
+            @foreach (var loc in @Model.Location.DisplayAddress)
             {
-                @loc<br />
+                @loc
+
+                <br />
             }
-            @Model.DisplayPhone<br/>
+            @Model.DisplayPhone<br />
             <div class="container">
-                <strong>Reviews</strong>
-                <dl>
-                    @foreach (var review in Model.Reviews)
-                    {
-                        <dt class="">@review.Rating</dt>
-                        <dd class="">@review.Text</dd>
-                    }
-                </dl>
+                @if (Model.Reviews != null && Model.Reviews.Any())
+                {
+                    <strong>Reviews</strong>
+                    <dl>
+                        @foreach (var review in Model.Reviews)
+                        {
+                            <dt class="">@review.Rating</dt>
+                            <dd class="">@review.Text</dd>
+                        }
+                    </dl>
+                }
             </div>
         </div>
     </div>

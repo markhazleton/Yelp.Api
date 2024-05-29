@@ -113,14 +113,25 @@ public sealed class Client : ClientBase
                                                        string locale = null,
                                                        CancellationToken ct = default)
     {
-        ApplyAuthenticationHeaders();
-        var dic = new Dictionary<string, object>();
-        if (!string.IsNullOrEmpty(locale))
-            dic.Add("locale", locale);
-        string querystring = dic.ToQueryString();
-        return await this.GetAsync<ReviewsResponse>($"{API_VERSION}/businesses/{Uri.EscapeDataString(businessID)}/reviews{querystring}",
-                                                    ct)
-        .ConfigureAwait(false);
+        try
+        {
+            ApplyAuthenticationHeaders();
+            var dic = new Dictionary<string, object>();
+            if (!string.IsNullOrEmpty(locale))
+                dic.Add("locale", locale);
+            string querystring = dic.ToQueryString();
+            return await this.GetAsync<ReviewsResponse>($"{API_VERSION}/businesses/{Uri.EscapeDataString(businessID)}/reviews{querystring}",
+                                                        ct)
+            .ConfigureAwait(false);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        return new ReviewsResponse();
+
+
     }
 
     /// <summary>
@@ -135,7 +146,7 @@ public sealed class Client : ClientBase
         if (search == null)
             throw new ArgumentNullException(nameof(search));
 
-        ValidateCoordinates(search.Latitude, search.Longitude);
+        //ValidateCoordinates(search.Latitude, search.Longitude);
         ApplyAuthenticationHeaders();
 
         var querystring = search.GetChangedProperties().ToQueryString();
