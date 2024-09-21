@@ -1,4 +1,6 @@
-﻿namespace Yelp.Api.Domain.Models;
+﻿using System.Text.Json;
+
+namespace Yelp.Api.Domain.Models;
 
 public class AutocompleteResponse : ResponseBase
 {
