@@ -4,25 +4,25 @@ public class Location
 {
 
     [JsonProperty("address1")]
-    public string Address1 { get; set; }
+    public string Address1 { get; set; } = string.Empty;
 
     [JsonProperty("address2")]
-    public string Address2 { get; set; }
+    public string Address2 { get; set; } = string.Empty;
 
     [JsonProperty("address3")]
-    public string Address3 { get; set; }
+    public string Address3 { get; set; } = string.Empty;
 
     [JsonProperty("city")]
-    public string City { get; set; }
+    public string City { get; set; } = string.Empty;
     [JsonProperty("country")]
-    public string Country { get; set; }
+    public string Country { get; set; } = string.Empty;
 
     [JsonProperty("display_address")]
     public string[] DisplayAddress { get; set; } = [];
 
     [JsonProperty("state")]
-    public string State { get; set; }
+    public string State { get; set; } = string.Empty;
 
     [JsonProperty("zip_code")]
-    public string ZipCode { get; set; }
+    public string ZipCode { get; set; } = string.Empty;
 }

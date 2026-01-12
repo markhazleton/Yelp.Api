@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet --version:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet build:*)",
+      "Bash(Select-String -Pattern \"warning\")",
+      "Bash(Measure-Object -Line)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet clean:*)"
+    ]
+  }
+}

@@ -3,7 +3,7 @@ namespace Yelp.Api.Domain.Extensions;
 
 public static class DictionaryExtensions
 {
-    public static IEnumerable<KeyValuePair<T, S>> ToKeyValuePairList<T, S>(this Dictionary<T, S> dictionary)
+    public static IEnumerable<KeyValuePair<T, S>> ToKeyValuePairList<T, S>(this Dictionary<T, S> dictionary) where T : notnull
     {
         var list = new List<KeyValuePair<T, S>>();
         foreach (var pair in dictionary)
@@ -20,7 +20,7 @@ public static class DictionaryExtensions
             return querystring;
 
         foreach (var pair in dictionary.Where(w => w.Value != null))
-            parameters.Add(string.Join("=", pair.Key, Uri.EscapeUriString(pair.Value.ToString())));
+            parameters.Add(string.Join("=", pair.Key, Uri.EscapeDataString(pair.Value?.ToString() ?? string.Empty)));
 
         if (parameters.Count > 0)
             querystring = $"?{(string.Join("&", parameters))}";

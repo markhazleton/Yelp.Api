@@ -6,15 +6,15 @@
 public sealed class SearchRequest : TrackedChangesModelBase, ICoordinates
 {
 
-    private string _Attributes;
+    private string _Attributes = string.Empty;
 
-    private string _Categories;
+    private string _Categories = string.Empty;
 
     private double _Latitude = double.NaN;
 
-    private string _Locale;
+    private string _Locale = string.Empty;
 
-    private string _Location;
+    private string _Location = string.Empty;
 
     private double _Longitude = double.NaN;
 
@@ -24,15 +24,15 @@ public sealed class SearchRequest : TrackedChangesModelBase, ICoordinates
 
     private bool _OpenNow;
 
-    private string _Price;
+    private string _Price = string.Empty;
 
     private int _Radius;
 
     private int _ResultsOffset = 0;
 
-    private string _SortBy;
+    private string _SortBy = string.Empty;
 
-    private string _Term;
+    private string _Term = string.Empty;
 
     /// <summary>
     /// Optional. Additional filters to restrict search results. Possible values are: 

@@ -8,7 +8,7 @@ public class ClientTests : IDisposable
     public ClientTests(IConfiguration configuration, ILogger logger, IHttpClientFactory factory)
     {
         _configuration = configuration;
-        _client = new Client(configuration["YELPAPIKEY"], factory, logger);
+        _client = new Client(configuration["YELPAPIKEY"] ?? string.Empty, factory, logger);
     }
     private readonly IConfiguration _configuration;
 
@@ -61,6 +61,7 @@ public class ClientTests : IDisposable
     {
         var response = _client.AutocompleteAsync("hot dogs", 37.786882, -122.399972).Result;
 
+        Assert.IsNotNull(response);
         Assert.IsTrue(response.Categories.Length > 0);
         Assert.AreNotSame(null, response);
         Assert.AreSame(null,

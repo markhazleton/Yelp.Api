@@ -11,15 +11,18 @@
             <h3 class="text-primary text-shadow"><a class="tile-link" target="_blank" href="@Model?.Url">@Model?.Name</a></h3>
         </div>
         <div class="card-body">
-            @foreach (var loc in @Model.Location.DisplayAddress)
+            @if (Model?.Location?.DisplayAddress != null)
             {
-                @loc
+                @foreach (var loc in @Model.Location.DisplayAddress)
+                {
+                    @loc
 
-                <br />
+                    <br />
+                }
             }
-            @Model.DisplayPhone<br />
+            @(Model?.DisplayPhone ?? "")<br />
             <div class="container">
-                @if (Model.Reviews != null && Model.Reviews.Any())
+                @if (Model?.Reviews != null && Model.Reviews.Any())
                 {
                     <strong>Reviews</strong>
                     <dl>

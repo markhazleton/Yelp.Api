@@ -5,7 +5,7 @@ public abstract class ModelBase : INotifyPropertyChanged
     /// <summary>
     /// Multicast event for property change notifications.
     /// </summary>
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     /// Gets the MemberExpression from a property expression.
@@ -66,7 +66,7 @@ public abstract class ModelBase : INotifyPropertyChanged
     /// support CallerMemberName.</param>
     /// <returns>True if the value was changed, false if the existing value matched the
     /// desired value.</returns>
-    protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] String propertyName = null)
+    protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] String? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(storage, value))
         {
@@ -86,7 +86,7 @@ public abstract class ModelBase : INotifyPropertyChanged
     /// <typeparam name="T">Type of the property in the expression.</typeparam>
     /// <param name="property">Expression to retrieve the property. Example: () => this.FirstName</param>
     /// <returns>PropertyInfo object of the expression property else null if not found.</returns>
-    protected internal PropertyInfo GetPropertyInfo<T>(Expression<Func<T>> property)
+    protected internal PropertyInfo? GetPropertyInfo<T>(Expression<Func<T>> property)
     {
         if (property != null && property.Body is MemberExpression)
         {
@@ -103,7 +103,7 @@ public abstract class ModelBase : INotifyPropertyChanged
     /// <param name="propertyName">Optional name of the property used to notify listeners.  This
     /// value is optional and can be provided automatically when invoked from compilers
     /// that support <see cref="CallerMemberNameAttribute"/>.</param>
-    protected internal virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+    protected internal virtual void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

@@ -3,5 +3,5 @@
 public class Region
 {
     [JsonProperty("center")]
-    public Coordinates Center { get; set; }
+    public Coordinates Center { get; set; } = new();
 }

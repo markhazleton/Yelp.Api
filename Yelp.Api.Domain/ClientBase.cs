@@ -11,10 +11,10 @@ public abstract class ClientBase : IDisposable
     public const int E_WINHTTP_CONNECTION_ERROR = unchecked((int)0x80072efe);
     public const int E_WINHTTP_NAME_NOT_RESOLVED = unchecked((int)0x80072ee7);
     public const int E_WINHTTP_TIMEOUT = unchecked((int)0x80072ee2);
-    private ILogger _logger;
+    private ILogger? _logger;
 
 
-    public ClientBase(string baseURL, IHttpClientFactory factory, ILogger logger = null)
+    public ClientBase(string baseURL, IHttpClientFactory factory, ILogger? logger = null)
     {
         this.BaseUri = new Uri(baseURL);
         this.Client = factory.CreateClient("YelpAPI");
@@ -42,10 +42,10 @@ public abstract class ClientBase : IDisposable
         {
             var message = string.Format(
                 $"{Environment.NewLine}---------------------------------{Environment.NewLine}WEB REQUEST to {{0}}{Environment.NewLine}-Method: {{1}}{Environment.NewLine}-Headers: {{2}}{Environment.NewLine}-Contents: {Environment.NewLine}{{3}}{Environment.NewLine}---------------------------------",
-                request.RequestUri.OriginalString,
+                request.RequestUri?.OriginalString ?? "unknown",
                 request.Method.Method,
-                request.Headers?.ToString(),
-                request.Content?.ReadAsStringAsync().Result
+                request.Headers?.ToString() ?? string.Empty,
+                request.Content?.ReadAsStringAsync().Result ?? string.Empty
             );
             this.Log(message);
         }
@@ -64,17 +64,18 @@ public abstract class ClientBase : IDisposable
         if (response == null)
             throw new ArgumentNullException(nameof(response));
 
-        this.Log(response.RequestMessage);
+        if (response.RequestMessage != null)
+            this.Log(response.RequestMessage);
 
         try
         {
             var message = string.Format(
                 $"{Environment.NewLine}---------------------------------{Environment.NewLine}WEB RESPONSE to {{0}}{Environment.NewLine}-HttpStatus: {{1}}{Environment.NewLine}-Reason Phrase: {{2}}{Environment.NewLine}-ContentLength: {{3:0.00 KB}}{Environment.NewLine}-Contents: {Environment.NewLine}{{4}}{Environment.NewLine}---------------------------------",
-                response.RequestMessage.RequestUri.OriginalString,
+                response.RequestMessage?.RequestUri?.OriginalString ?? "unknown",
                 $"{(int)response.StatusCode} {response.StatusCode.ToString()}",
-                response.ReasonPhrase,
+                response.ReasonPhrase ?? "unknown",
                 Convert.ToDecimal(Convert.ToDouble(response.Content.Headers.ContentLength) / 1024),
-                response.Content?.ReadAsStringAsync().Result
+                response.Content?.ReadAsStringAsync().Result ?? string.Empty
                 );
             this.Log(message);
         }
@@ -96,7 +97,7 @@ public abstract class ClientBase : IDisposable
     /// <param name="serializerType">Specifies how the data should be deserialized.</param>
     /// <returns>Instance of the type specified representing the data returned from the URL.</returns>
     /// <summary>
-    protected async Task<T> GetAsync<T>(string url, CancellationToken ct)
+    protected async Task<T?> GetAsync<T>(string url, CancellationToken ct)
     {
         if (string.IsNullOrEmpty(url))
             throw new ArgumentNullException(nameof(url));
@@ -124,7 +125,7 @@ public abstract class ClientBase : IDisposable
     /// <param name="ct">Cancellation token.</param>
     /// <param name="serializerType">Specifies how the data should be deserialized.</param>
     /// <returns>Instance of the type specified representing the data returned from the URL.</returns>
-    protected async Task<T> PostAsync<T>(string url, CancellationToken ct, HttpContent contents = default(HttpContent))
+    protected async Task<T?> PostAsync<T>(string url, CancellationToken ct, HttpContent? contents = null)
     {
         string data = await this.PostAsync(url, ct, contents).ConfigureAwait(false);
 
@@ -146,11 +147,11 @@ public abstract class ClientBase : IDisposable
     /// <param name="ct">Cancellation token.</param>
     /// <param name="serializerType">Specifies how the data should be deserialized.</param>
     /// <returns>Response contents as string else null if nothing.</returns>
-    protected async Task<string> PostAsync(string url, CancellationToken ct, HttpContent contents = default(HttpContent))
+    protected async Task<string> PostAsync(string url, CancellationToken ct, HttpContent? contents = null)
     {
         HttpResponseMessage response = await this.PostAsync(url, contents, ct).ConfigureAwait(false);
-        var data = await response.Content?.ReadAsStringAsync();
-        return data;
+        var data = await response.Content.ReadAsStringAsync();
+        return data ?? string.Empty;
     }
 
     /// <summary>
@@ -161,7 +162,7 @@ public abstract class ClientBase : IDisposable
     /// <param name="ct">Cancellation token.</param>
     /// <param name="serializerType">Specifies how the data should be deserialized.</param>
     /// <returns>Response contents as string else null if nothing.</returns>
-    protected async Task<HttpResponseMessage> PostAsync(string url, HttpContent contents, CancellationToken ct)
+    protected async Task<HttpResponseMessage> PostAsync(string url, HttpContent? contents, CancellationToken ct)
     {
         if (string.IsNullOrEmpty(url))
             throw new ArgumentNullException(nameof(url));
@@ -178,7 +179,6 @@ public abstract class ClientBase : IDisposable
     public void Dispose()
     {
         this.Client.Dispose();
-        this.Client = null;
     }
 
 

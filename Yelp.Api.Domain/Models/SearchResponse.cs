@@ -14,6 +14,6 @@ public class SearchResponse : ResponseBase
     /// </summary>
     public string? Term { get; set; }
     public DateTime RequestTime { get; set; }
-    public string City { get; internal set; }
-    public string State { get; internal set; }
+    public string City { get; internal set; } = string.Empty;
+    public string State { get; internal set; } = string.Empty;
 }

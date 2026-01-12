@@ -7,13 +7,13 @@ public class Review
     public int Rating { get; set; }
 
     [JsonProperty("text")]
-    public string Text { get; set; }
+    public string Text { get; set; } = string.Empty;
 
     [JsonProperty("time_created")]
-    public string TimeCreated { get; set; }
+    public string TimeCreated { get; set; } = string.Empty;
     [JsonProperty("url")]
-    public string Url { get; set; }
+    public string Url { get; set; } = string.Empty;
 
     [JsonProperty("user")]
-    public User User { get; set; }
+    public User User { get; set; } = new();
 }

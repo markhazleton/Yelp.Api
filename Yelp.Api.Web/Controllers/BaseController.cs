@@ -28,8 +28,12 @@ public abstract class BaseController : Controller
     {
         cts = new CancellationTokenSource();
         _configuration = configuration;
-        _client = new Client(configuration["YELPAPIKEY"], factory);
+        _client = new Client(configuration["YELPAPIKEY"] ?? string.Empty, factory);
     }
+    /// <summary>
+    /// Gets the application status
+    /// </summary>
+    /// <returns>ApplicationStatus instance</returns>
     protected ApplicationStatus GetApplicationStatus()
     {
         return new ApplicationStatus(Assembly.GetExecutingAssembly());

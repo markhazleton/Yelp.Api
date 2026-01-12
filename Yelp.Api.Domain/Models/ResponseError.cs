@@ -3,7 +3,7 @@
 public sealed class ResponseError
 {
     [JsonProperty("code")]
-    public string Code { get; set; }
+    public string Code { get; set; } = string.Empty;
     [JsonProperty("description")]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 }

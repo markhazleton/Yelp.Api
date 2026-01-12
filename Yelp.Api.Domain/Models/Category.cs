@@ -3,25 +3,25 @@
 public class Category : IEquatable<Category>
 {
 
-    public static bool operator !=(Category category1, Category category2)
+    public static bool operator !=(Category? category1, Category? category2)
     {
-        if (((object)category1) == null || ((object)category2) == null)
-            return !Object.Equals(category1, category2);
+        if (category1 is null || category2 is null)
+            return !Equals(category1, category2);
 
         return !(category1.Equals(category2));
     }
 
-    public static bool operator ==(Category category1, Category category2)
+    public static bool operator ==(Category? category1, Category? category2)
     {
-        if (((object)category1) == null || ((object)category2) == null)
-            return Object.Equals(category1, category2);
+        if (category1 is null || category2 is null)
+            return Equals(category1, category2);
 
         return category1.Equals(category2);
     }
 
 
 
-    public bool Equals(Category other)
+    public bool Equals(Category? other)
     {
         if (other == null)
             return false;
@@ -32,12 +32,12 @@ public class Category : IEquatable<Category>
             return false;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj == null)
             return false;
 
-        Category category = obj as Category;
+        Category? category = obj as Category;
         if (category == null)
             return false;
         else
@@ -50,9 +50,9 @@ public class Category : IEquatable<Category>
     }
 
     [JsonProperty("alias")]
-    public string Alias { get; set; }
+    public string Alias { get; set; } = string.Empty;
 
     [JsonProperty("title")]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
 }

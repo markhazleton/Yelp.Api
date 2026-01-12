@@ -24,11 +24,11 @@ public class Open
     [JsonProperty("day")]
     public int Day { get; set; }
     [JsonProperty("end")]
-    public string End { get; set; }
+    public string End { get; set; } = string.Empty;
 
     [JsonProperty("is_overnight")]
     public bool IsOvernight { get; set; }
 
     [JsonProperty("start")]
-    public string Start { get; set; }
+    public string Start { get; set; } = string.Empty;
 }

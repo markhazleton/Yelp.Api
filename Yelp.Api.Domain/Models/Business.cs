@@ -59,13 +59,13 @@ public class BusinessResponse : ResponseBase
     }
 
     [JsonProperty("categories")]
-    public Category[] Categories { get; set; }
+    public Category[] Categories { get; set; } = Array.Empty<Category>();
 
     [JsonProperty("coordinates")]
-    public Coordinates Coordinates { get; set; }
+    public Coordinates Coordinates { get; set; } = new();
 
     [JsonProperty("display_phone")]
-    public string DisplayPhone { get; set; }
+    public string DisplayPhone { get; set; } = string.Empty;
 
     [JsonProperty("distance")]
     public float Distance { get; set; }
@@ -79,13 +79,13 @@ public class BusinessResponse : ResponseBase
     }
 
     [JsonProperty("hours")]
-    public Hour[] Hours { get; set; }
+    public Hour[] Hours { get; set; } = Array.Empty<Hour>();
 
     [JsonProperty("id")]
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     [JsonProperty("image_url")]
-    public string ImageUrl { get; set; }
+    public string ImageUrl { get; set; } = string.Empty;
 
     [JsonProperty("is_claimed")]
     public bool IsClaimed { get; set; }
@@ -99,27 +99,27 @@ public class BusinessResponse : ResponseBase
     public static bool IsMetric { get; private set; }
 
     [JsonProperty("location")]
-    public Location Location { get; set; }
+    public Location Location { get; set; } = new();
 
     [JsonProperty("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [JsonProperty("phone")]
-    public string Phone { get; set; }
+    public string Phone { get; set; } = string.Empty;
     [JsonProperty("photos")]
-    public string[] Photos { get; set; }
+    public string[] Photos { get; set; } = Array.Empty<string>();
 
     [JsonProperty("price")]
-    public string Price { get; set; }
+    public string Price { get; set; } = string.Empty;
 
     [JsonProperty("rating")]
     public float Rating { get; set; }
 
     [JsonProperty("review_count")]
     public int ReviewCount { get; set; }
-    public List<Review> Reviews { get; set; }
+    public List<Review> Reviews { get; set; } = new();
 
     [JsonProperty("url")]
-    public string Url { get; set; }
+    public string Url { get; set; } = string.Empty;
 
 }

@@ -3,5 +3,5 @@
 public abstract class ResponseBase : ModelBase
 {
     [JsonProperty("error")]
-    public ResponseError Error { get; set; }
+    public ResponseError Error { get; set; } = new();
 }

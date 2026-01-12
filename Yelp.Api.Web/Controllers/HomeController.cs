@@ -6,9 +6,10 @@ namespace Yelp.Api.Web.Controllers;
 public class HomeController : BaseController
 {
     /// <summary>
-    /// 
+    /// Home Controller Constructor
     /// </summary>
-    /// <param name="configuration"></param>
+    /// <param name="configuration">Configuration instance</param>
+    /// <param name="factory">HTTP client factory instance</param>
     public HomeController(IConfiguration configuration, IHttpClientFactory factory) : base(configuration, factory)
     {
 

@@ -4,7 +4,7 @@ public class User
 {
 
     [JsonProperty("image_url")]
-    public string ImageUrl { get; set; }
+    public string ImageUrl { get; set; } = string.Empty;
     [JsonProperty("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

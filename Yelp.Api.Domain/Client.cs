@@ -17,7 +17,7 @@ public sealed class Client : ClientBase
     /// </summary>
     /// <param name="apiKey">App secret from yelp's developer registration page.</param>
     /// <param name="logger">Optional class instance which applies the ILogger interface to support custom logging within the client.</param>
-    public Client(string apiKey, IHttpClientFactory factory, ILogger logger = null) : base(BASE_ADDRESS, factory, logger)
+    public Client(string apiKey, IHttpClientFactory factory, ILogger? logger = null) : base(BASE_ADDRESS, factory, logger)
     {
         if (string.IsNullOrWhiteSpace(apiKey))
             throw new ArgumentNullException(nameof(apiKey));
@@ -58,10 +58,10 @@ public sealed class Client : ClientBase
     /// <param name="locale">Language/locale value from https://www.yelp.com/developers/documentation/v3/supported_locales </param>
     /// <param name="ct">Cancellation token instance. Use CancellationToken.None if not needed.</param>
     /// <returns>AutocompleteResponse with businesses/categories/terms matching the specified parameters.</returns>
-    public async Task<AutocompleteResponse> AutocompleteAsync(string text,
+    public async Task<AutocompleteResponse?> AutocompleteAsync(string text,
                                                               double latitude,
                                                               double longitude,
-                                                              string locale = null,
+                                                              string? locale = null,
                                                               CancellationToken ct = default)
     {
         ValidateCoordinates(latitude, longitude);
@@ -94,7 +94,7 @@ public sealed class Client : ClientBase
     /// <param name="businessID">ID value of the Yelp business.</param>
     /// <param name="ct">Cancellation token instance. Use CancellationToken.None if not needed.</param>
     /// <returns>BusinessResponse instance with details of the specified business if found.</returns>
-    public async Task<BusinessResponse> GetBusinessAsync(string businessID,
+    public async Task<BusinessResponse?> GetBusinessAsync(string businessID,
                                                          CancellationToken ct = default)
     {
         ApplyAuthenticationHeaders();
@@ -109,8 +109,8 @@ public sealed class Client : ClientBase
     /// <param name="locale">Language/locale value from https://www.yelp.com/developers/documentation/v3/supported_locales </param>
     /// <param name="ct">Cancellation token instance. Use CancellationToken.None if not needed.</param>
     /// <returns>ReviewsResponse instance with reviews of the specified business if found.</returns>
-    public async Task<ReviewsResponse> GetReviewsAsync(string businessID,
-                                                       string locale = null,
+    public async Task<ReviewsResponse?> GetReviewsAsync(string businessID,
+                                                       string? locale = null,
                                                        CancellationToken ct = default)
     {
         try
@@ -140,7 +140,7 @@ public sealed class Client : ClientBase
     /// <param name="search">Container object for all search parameters.</param>
     /// <param name="ct">Cancellation token instance. Use CancellationToken.None if not needed.</param>
     /// <returns>SearchResponse with businesses matching the specified parameters.</returns>
-    public async Task<SearchResponse> SearchBusinessesAllAsync(SearchRequest search,
+    public async Task<SearchResponse?> SearchBusinessesAllAsync(SearchRequest search,
                                                                CancellationToken ct = default)
     {
         if (search == null)
@@ -169,7 +169,7 @@ public sealed class Client : ClientBase
     /// <param name="longitude">User's current longitude.</param>
     /// <param name="ct">Cancellation token instance. Use CancellationToken.None if not needed.</param>
     /// <returns>SearchResponse with businesses matching the specified parameters.</returns>
-    public Task<SearchResponse> SearchBusinessesAllAsync(string term,
+    public Task<SearchResponse?> SearchBusinessesAllAsync(string term,
                                                          double latitude,
                                                          double longitude,
                                                          CancellationToken ct = default)
@@ -190,7 +190,7 @@ public sealed class Client : ClientBase
     /// <param name="longitude">User's current longitude.</param>
     /// <param name="ct">Cancellation token instance. Use CancellationToken.None if not needed.</param>
     /// <returns>SearchResponse with businesses matching the specified parameters.</returns>
-    public async Task<SearchResponse> SearchBusinessesWithDeliveryAsync(string term,
+    public async Task<SearchResponse?> SearchBusinessesWithDeliveryAsync(string term,
                                                                         double latitude,
                                                                         double longitude,
                                                                         CancellationToken ct = default)
@@ -243,7 +243,8 @@ public sealed class Client : ClientBase
         {
             search.Location = $"{city}, {state}";
         }
-        SearchResponse result = SearchBusinessesAllAsync(search, ct).Result;
+        SearchResponse? result = SearchBusinessesAllAsync(search, ct).Result;
+        if (result == null) return string.Empty;
         XmlSerializer writer = new XmlSerializer(typeof(SearchResponse));
         StringWriter sw = new StringWriter();
         writer.Serialize(sw, result);
@@ -291,22 +292,30 @@ public sealed class Client : ClientBase
         if (details)
         {
             cacheContents = SearchBusinessesAllAsync(search, ct).Result;
-            var bizList = cacheContents.Businesses.Select(s => s.Id).ToArray();
-            cacheContents.Businesses.Clear();
-            foreach (var biz in bizList)
+            if (cacheContents != null)
             {
-                cacheContents.Businesses.Add(await GetBusinessAsync(biz, ct));
-            }
+                var bizList = cacheContents.Businesses.Select(s => s.Id).ToArray();
+                cacheContents.Businesses.Clear();
+                foreach (var biz in bizList)
+                {
+                    var business = await GetBusinessAsync(biz, ct);
+                    if (business != null)
+                        cacheContents.Businesses.Add(business);
+                }
 
-            foreach (var biz in cacheContents.Businesses)
-            {
-                biz.Reviews.AddRange((await GetReviewsAsync(biz.Id, ct: ct)).Reviews);
+                foreach (var biz in cacheContents.Businesses)
+                {
+                    var reviews = await GetReviewsAsync(biz.Id, ct: ct);
+                    if (reviews?.Reviews != null)
+                        biz.Reviews.AddRange(reviews.Reviews);
+                }
             }
         }
         else
         {
             cacheContents = await SearchBusinessesAllAsync(search, ct);
         }
+        if (cacheContents == null) return new SearchResponse();
         cacheContents.City = city;
         cacheContents.State = state;
         cacheContents.Term = term;
